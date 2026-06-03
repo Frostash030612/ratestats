@@ -1,0 +1,27 @@
+{
+  "trained_at": "2026-06-03T09:49:31",
+  "manual_xlsx": "C:\\Users\\xuwenzhe\\Desktop\\RateStats\\RateStats_Portable\\assets\\url_params.xlsx",
+  "n_samples": 2030,
+  "n_positive": 275,
+  "n_negative": 1755,
+  "feature_names": [
+    "rule_score",
+    "matches_dest",
+    "same_host_as_ref",
+    "path_jaccard_ref",
+    "path_prefix_match_ref",
+    "dest_is_board",
+    "dest_is_promo",
+    "dest_is_api",
+    "dest_is_pdf",
+    "url_has_api_hint",
+    "url_has_pdf",
+    "url_has_promo_kw",
+    "url_has_board_kw",
+    "path_depth",
+    "candidate_rank",
+    "url_len"
+  ],
+  "cv_roc_auc_mean": 0.9992437192437192,
+  "model_type": "HistGradientBoostingClassifier"
+}

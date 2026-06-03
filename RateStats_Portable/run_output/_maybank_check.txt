@@ -1,0 +1,9 @@
+maybank_fail_meta_rows=0
+
+
+maybank_meta_lines:
+Maybank 新元定存促销页 | https://www.maybank2u.com.sg/en/promotions/deposits/sgd-time-deposit.page
+Maybank SGD 挂牌利率页 | https://sslsecure.maybank.com.sg/cgi-bin/mbs/JSPscripts/mbb_rates/deposit_rate.jsp
+Maybank 外币挂牌利率页 | https://sslsecure.maybank.com.sg/cgi-bin/mbs/JSPscripts/mbb_rates/deposit_rate.jsp
+
+SGD_promo_Maybank_rows=3

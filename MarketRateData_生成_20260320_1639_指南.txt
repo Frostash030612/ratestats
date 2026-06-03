@@ -1,0 +1,157 @@
+================================================================================
+MarketRateData 生成文件使用指南
+================================================================================
+
+📁 生成的文件:
+  • MarketRateData_生成_20260320_1639.csv - 市场数据CSV文件
+  • MarketRateData_生成_20260320_1639_指南.txt - 本指南
+
+📊 文件格式说明:
+  • Bank: 银行代码
+  • 1M, 3M, 6M, 9M, 12M: 各期限利率
+  • 18M, 24M: 长期利率（通常为空）
+  • Minimum Amount: 最低存款金额
+  • Others: 其他条件
+  • 代表本周有调整: 标记本周是否有调整
+
+🚀 使用方法:
+  1. 打开CSV文件，检查数据
+  2. 根据下方列出的银行链接，访问各银行官网
+  3. 手动更新利率数据（确保数据准确）
+  4. 将CSV导入Excel，或直接编辑
+  5. 使用更新后的数据生成彩虹表
+
+💡 手动抓取步骤:
+  1. 访问银行官网的定期存款/利率页面
+  2. 查找以下信息:
+     • 期限: 1个月, 3个月, 6个月, 9个月, 12个月
+     • 利率: 百分比数值（如1.25%）
+     • 最低金额: 起存金额（如$500, $10K）
+     • 条件: 新资金、手机银行、网上银行等要求
+  3. 将找到的数据填入CSV对应位置
+
+🔗 银行链接汇总（从利率链接.xlsx提取）:
+----------------------------------------
+文件包含 5 个sheet:
+
+📄 工作表1:
+  • 未知: https://www.hkbea.com.sg/html/en/beasg-rates-foreign-currency-fixed-deposit-rates.html
+  • 未知: https://www.hkbea.com.sg/html/en/index.html
+  • 未知: https://www.hkbea.com.sg/html/en/beasg-rates-sgd-fixed-deposit-rates.html
+  • BOC: https://www.bankofchina.com/sg/cn/bocinfo/bi3/bi31/
+  • 未知: https://www.bankofchina.com/sg/cn/bocinfo/bi3/bi32/202505/t20250519_25354209.html
+  • 未知: https://www.bankofchina.com/sg/cn/bocinfo/bi3/bi31/202511/t20251110_25563022.html
+  • 未知: https://www.bankofchina.com/sg/cn/bocinfo/bi3/bi32/202505/t20250519_25354209.html
+  • CIMB: https://www.cimb.com.sg/en/personal/help-support/rates-charges/rates/foreign-currency-fixed-deposit-rates.html
+  • 未知: https://www.cimb.com.sg/en/personal/banking-with-us/accounts/fixed-deposit/cimb-foreign-currency-fixed-deposit-account.html
+  • 未知: https://www.cimb.com.sg/en/personal/help-support/rates-charges/rates/sgd-fixed-deposit-rates.html
+  • CITI: https://www.citibank.com.sg/static/all-promo#tabs-cf92219dfc-item-6a8eaa1eca-tab
+  • 未知: https://www.citibank.com.sg/personal-banking/deposits/fixed-deposit-account
+  • 未知: https://www.citibank.com.sg/personal-banking/deposits/fixed-deposit-account#tabs-5847e28654-item-eac3d14f73-tab
+  • 未知: https://www.dbs.com.sg/personal/rates-online/foreign-currency-fixed-deposits.page
+  • 未知: https://www.dbs.com.sg/personal/rates-online/fixed-deposit-rate-singapore-dollar.page
+  • 未知: https://www.hlbank.com.sg/en/personal-banking/deposits/fixed-deposit-account/foreign-currency-fd.html
+  • 未知: https://www.hlbank.com.sg/en/personal-banking/help-support/fixed-deposit-rate.html
+  • 未知: https://www.hlf.com.sg/personal/promotions/fixed-deposits-promotion-singapore.php
+  • 未知: https://www.hlf.com.sg/personal/deposits/fixed-deposits-singapore.php
+  • HSBC: https://www.hsbc.com.sg/accounts/products/foreign-currency-time-deposit/
+  • 未知: https://www.hsbc.com.sg/accounts/products/time-deposit/?promo=PSR1502649&cid=SGH:JC:P1:HP:01:2001:1502649:Acq_HP_PSR_Google&hidden_type=PSR1502649&gad_source=1&gad_campaignid=22078423845&gbraid=0AAAAADxLzrUn_-ljIVd7oUPe4ykK4xkLM&gclid=CjwKCAjw87XBBhBIEiwAxP3_A4c0tmLW3KLhl3LWPKwx_DleT8rvngBgT846jXEhpf1QRYxvbH7bSBoC2BIQAvD_BwE&gclsrc=aw.ds
+  • 未知: https://www.hsbc.com.sg/rates/singapore-dollar-deposits/
+  • 未知: https://singapore.icbc.com.cn/en/page/721852523895095311.html
+  • 未知: https://singapore.icbc.com.cn/en/page/721852523895095311.html
+  • 未知: https://singapore.icbc.com.cn/en/page/721852523895095311.html
+  • 未知: https://www.maybank2u.com.sg/en/rates/rates-charges.page?
+  • 未知: https://sslsecure.maybank.com.sg/cgi-bin/mbs/JSPscripts/mbb_rates/deposit_rate.jsp
+  • 未知: https://www.ocbc.com/personal-banking/deposits/interest-rates
+  • 未知: https://www.ocbc.com/personal-banking/deposits/fixed-deposit-account
+  • 未知: https://www.ocbc.com/personal-banking/deposits/fixed-deposit-sgd-interest-rates.page
+  • RHB: https://rhbgroup.com.sg/rhb/personal/promotions/foreign-currency-fixed-deposit-campaign
+  • 未知: https://www.rhbgroup.com.sg/dam/jcr:98394f8b-4141-4685-bfdc-494135e614f3/Depositrates.pdf
+  • 未知: https://rhbgroup.com.sg/rhb/personal/promotions/fixed-deposit-campaign?saf_src=google_g&saf_pt=&saf_kw=rhb%20fixed%20deposit&saf_dv=&saf_cam=17369742603&saf_grp=150249554560&saf_ad=737867878761&account_id=9328448803&saf_acc=9328448803&saf_cam_tp=search&gad_source=1&gad_campaignid=17369742603&gbraid=0AAAAAoZjJiJ7QoZr6x8Ha9s86bCeUy4y1&gclid=CjwKCAjw6NrBBhB6EiwAvnT_rgqyTxIQXJiUTOkcTjnR_mCbv7LwJersNuDtDYv1AQ6oLOzcW4h7LxoCkawQAvD_BwE
+  • 未知: https://www.singfinance.com.sg/fixed-deposit-fd-online/
+  • 未知: https://www.singfinance.com.sg/rates/
+  • SCB: https://www.sc.com/sg/save/time-deposits/foreign-currency-time-deposits/?subChanCode=IB04&cid=sem-GOOGLE-58700007908333096-p71886082989-71700000097118771-na-sg-en&gad_source=1&gad_campaignid=17628603791&gbraid=0AAAAACdMniazu-yuLHnNtFm6HBkWu0UPb&gclid=CjwKCAjw3f_BBhAPEiwAaA3K5I0ywfaj-N9y-iL8PJ57FBNDmtjYjzmT9cmER4QyxkQBJHvokt6oNxoC_JQQAvD_BwE&gclsrc=aw.ds
+  • 未知: https://www.sc.com/sg/help/faqs/foreign-currency-interest-rates/
+  • 未知: https://www.sc.com/sg/save/time-deposits/singapore-dollar-time-deposit/?subChanCode=IB04&cid=sem-GOOGLE-58700007909227731-p76519190772-71700000097343073-na-sg-en&gad_source=1&gad_campaignid=17628603788&gbraid=0AAAAACdMniajDMZDF91aN96qXKvec8dLQ&gclid=CjwKCAjw6NrBBhB6EiwAvnT_rnjNTbslC-5bQROZgneNgErwV4dKP41ONASFNZY44l3df8VoeGdJcBoCu3AQAvD_BwE&gclsrc=aw.ds
+  • 未知: https://www.sc.com/sg/help/faqs/sgd-time-deposit-interest-rates/
+  • SBI: https://sg.statebank/usd-promotions
+  • 未知: https://sg.statebank/interest-rates
+  • 未知: https://sg.statebank/sgd-promotions
+  • 未知: https://sg.statebank/interest-rates
+  • 未知: https://www.uobgroup.com/online-rates/foreign-currency-fixed-deposits.page
+  • 未知: https://www.uob.com.sg/personal/save/fixed-deposits/singapore-dollar-fixed-deposit.page
+  • 未知: https://www.uob.com.sg/personal/online-rates/singapore-dollar-time-fixed-deposit-rates.page
+
+📄 SGD促销:
+  • BEA: https://www.hkbea.com.sg/html/en/index.html
+  • BOC: https://www.bankofchina.com/sg/cn/bocinfo/bi3/bi31/202603/t20260302_25651264.html
+  • CIMB: https://www.cimb.com.sg/en/personal/help-support/rates-charges/rates/sgd-fixed-deposit-rates.html
+  • CITI: https://www.citibank.com.sg/static/all-promo?lid=SGENCGGCGMITLAllpromo
+  • HLB: https://www.hlbank.com.sg/en/personal-banking/promotions/fixed-deposit-promotion-2026.html
+  • HLF: https://www.hlf.com.sg/personal/promotions/fixed-deposits-promotion-singapore.php
+  • HSBC: https://www.hsbc.com.sg/accounts/products/time-deposit/?promo=PSR1502649&cid=SGH:JC:P1:HP:01:2001:1502649:Acq_HP_PSR_Google&hidden_type=PSR1502649&gad_source=1&gad_campaignid=22078423845&gbraid=0AAAAADxLzrUn_-ljIVd7oUPe4ykK4xkLM&gclid=CjwKCAjw87XBBhBIEiwAxP3_A4c0tmLW3KLhl3LWPKwx_DleT8rvngBgT846jXEhpf1QRYxvbH7bSBoC2BIQAvD_BwE&gclsrc=aw.ds
+  • ICBC: https://singapore.icbc.com.cn/en/page/721852523895095311.html
+  • OCBC: https://www.ocbc.com/personal-banking/deposits/fixed-deposit-account
+  • RHB: https://rhbgroup.com.sg/rhb/personal/promotions/fixed-deposit-campaign?saf_src=google_g&saf_pt=&saf_kw=rhb%20fixed%20deposit&saf_dv=&saf_cam=17369742603&saf_grp=150249554560&saf_ad=737867878761&account_id=9328448803&saf_acc=9328448803&saf_cam_tp=search&gad_source=1&gad_campaignid=17369742603&gbraid=0AAAAAoZjJiJ7QoZr6x8Ha9s86bCeUy4y1&gclid=CjwKCAjw6NrBBhB6EiwAvnT_rgqyTxIQXJiUTOkcTjnR_mCbv7LwJersNuDtDYv1AQ6oLOzcW4h7LxoCkawQAvD_BwE
+  • Sing invest: https://www.singfinance.com.sg/fixed-deposit-fd-online/
+  • SCB: https://www.sc.com/sg/save/time-deposits/singapore-dollar-time-deposit/?subChanCode=IB04&cid=sem-GOOGLE-58700007909227731-p76519190772-71700000097343073-na-sg-en&gad_source=1&gad_campaignid=17628603788&gbraid=0AAAAACdMniajDMZDF91aN96qXKvec8dLQ&gclid=CjwKCAjw6NrBBhB6EiwAvnT_rnjNTbslC-5bQROZgneNgErwV4dKP41ONASFNZY44l3df8VoeGdJcBoCu3AQAvD_BwE&gclsrc=aw.ds
+  • SBI: https://sg.statebank/sgd-promotions
+  • UOB: https://www.uob.com.sg/personal/save/fixed-deposits/singapore-dollar-fixed-deposit.page
+
+📄 外币促销:
+  • BEA: https://www.hkbea.com.sg/html/en/index.html
+  • BOC: https://www.bankofchina.com/sg/cn/bocinfo/bi3/bi31/
+  • CIMB: https://www.cimb.com.sg/en/personal/banking-with-us/accounts/fixed-deposit/cimb-foreign-currency-fixed-deposit-account.html
+  • CITI: https://www.citibank.com.sg/static/all-promo#tabs-cf92219dfc-item-6a8eaa1eca-tab
+  • RHB: https://rhbgroup.com.sg/rhb/personal/promotions/foreign-currency-fixed-deposit-campaign
+  • SCB: https://www.sc.com/sg/save/time-deposits/foreign-currency-time-deposits/?subChanCode=IB04&cid=sem-GOOGLE-58700007908333096-p71886082989-71700000097118771-na-sg-en&gad_source=1&gad_campaignid=17628603791&gbraid=0AAAAACdMniazu-yuLHnNtFm6HBkWu0UPb&gclid=CjwKCAjw3f_BBhAPEiwAaA3K5I0ywfaj-N9y-iL8PJ57FBNDmtjYjzmT9cmER4QyxkQBJHvokt6oNxoC_JQQAvD_BwE&gclsrc=aw.ds
+  • SBI: https://sg.statebank/usd-promotions
+
+📄 新元挂牌:
+  • CIMB: https://www.cimb.com.sg/en/personal/help-support/rates-charges/rates/sgd-fixed-deposit-rates.html
+  • CITI: https://www.citibank.com.sg/personal-banking/deposits/fixed-deposit-account#tabs-5847e28654-item-eac3d14f73-tab
+  • DBS: https://www.dbs.com.sg/personal/rates-online/fixed-deposit-rate-singapore-dollar.page
+  • HLB: https://www.hlbank.com.sg/en/personal-banking/help-support/fixed-deposit-rate.html
+  • HLF: https://www.hlf.com.sg/personal/deposits/fixed-deposits-singapore.php
+  • HSBC: https://www.hsbc.com.sg/rates/singapore-dollar-deposits/
+  • ICBC: https://singapore.icbc.com.cn/en/page/721852523895095311.html
+  • maybank: https://sslsecure.maybank.com.sg/cgi-bin/mbs/JSPscripts/mbb_rates/deposit_rate.jsp
+  • OCBC: https://www.ocbc.com/personal-banking/deposits/fixed-deposit-sgd-interest-rates.page
+  • RHB: https://www.rhbgroup.com.sg/dam/jcr:98394f8b-4141-4685-bfdc-494135e614f3/Depositrates.pdf
+  • Sing invest: https://www.singfinance.com.sg/rates/
+  • SCB: https://www.sc.com/sg/help/faqs/sgd-time-deposit-interest-rates/
+  • SBI: https://sg.statebank/interest-rates
+  • UOB: https://www.uob.com.sg/personal/online-rates/singapore-dollar-time-fixed-deposit-rates.page
+
+📄 外币挂牌:
+  • HLB: https://www.hlbank.com.sg/en/personal-banking/deposits/fixed-deposit-account/foreign-currency-fd.html
+  • ICBC: https://singapore.icbc.com.cn/en/page/721852523895095311.html
+  • maybank: https://www.maybank2u.com.sg/en/rates/rates-charges.page?
+  • SCB: https://www.sc.com/sg/help/faqs/foreign-currency-interest-rates/
+  • SBI: https://sg.statebank/interest-rates
+
+----------------------------------------
+
+📝 数据更新示例:
+  假设你访问BOC网站，找到以下信息:
+  • 1个月: 1.10%, $500, 手机银行
+  • 3个月: 1.30%, $500, 手机银行
+  • 6个月: 1.35%, $500, 手机银行
+  • 9个月: 1.20%, $500, 手机银行
+  • 12个月: 1.40%, $500, 手机银行
+  则在CSV中BOC行更新为:
+  BOC,1.10%,1.30%,1.35%,1.20%,1.40%,-,-,$500,手机银行,
+
+🔄 转换为Excel:
+  1. 打开Microsoft Excel
+  2. 选择 文件 → 打开 → 选择CSV文件
+  3. Excel会自动识别CSV格式
+  4. 保存为Excel文件 (.xlsx)
+
+🎯 最终目标:
+  创建一个与现有MarketRateData.xlsx格式完全一致的
+  新文件，包含最新的银行利率数据。
+
+================================================================================
+生成完成！请根据指南操作。
+================================================================================

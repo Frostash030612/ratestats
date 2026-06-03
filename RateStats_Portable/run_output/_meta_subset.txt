@@ -1,0 +1,9 @@
+Maybank 新元定存促销页 | https://www.maybank2u.com.sg/en/promotions/deposits/sgd-time-deposit.page
+HSBC 外币定存促销页 | https://www.hsbc.com.sg/content/dam/hsbc/sg/documents/rates/fcy-time-deposits-pb.pdf
+DBS SGD 挂牌利率页 | https://www.dbs.com.sg/personal/rates-online/fixed-deposit-rate-singapore-dollar.page
+Maybank SGD 挂牌利率页 | https://sslsecure.maybank.com.sg/cgi-bin/mbs/JSPscripts/mbb_rates/deposit_rate.jsp
+HSBC 外币挂牌利率页 | https://www.hsbc.com.sg/rates/foreign-currency-time-deposits/
+Maybank 外币挂牌利率页 | https://sslsecure.maybank.com.sg/cgi-bin/mbs/JSPscripts/mbb_rates/deposit_rate.jsp
+DBS 外币挂牌利率页 | https://www.dbs.com.sg/sg-rates-api/v1/api/sgrates/getSGFCFDRates?FETCH_LATEST=1778551468
+Maybank 新元定存促销页面 | 抓取失败: 500 Server Error: Internal Server Error for url: https://maybank2u.com.sg/en/promotions/deposits/sgd-time-deposit.page
+工行新加坡 SGD 挂牌利率页面 | 抓取失败: HTTPSConnectionPool(host='singapore.icbc.com.cn', port=443): Max retries exceeded with url: /en/page/721852523895095311.html (Caused by SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1032)')))

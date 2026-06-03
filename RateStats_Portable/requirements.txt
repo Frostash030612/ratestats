@@ -1,0 +1,9 @@
+pandas
+openpyxl
+requests
+beautifulsoup4
+lxml
+pypdf
+pdfplumber
+curl_cffi>=0.7.0
+google-auth>=2.0.0

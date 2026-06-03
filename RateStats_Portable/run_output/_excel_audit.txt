@@ -1,0 +1,86 @@
+sheets: ['元数据', '新元定存促销', '新元挂牌利率', '外币定存促销', '外币定存备注', '挂牌_USD', '挂牌_AUD', '挂牌_EUR', '挂牌_GBP', '挂牌_HKD', '挂牌_JPY', '挂牌_CHF', '挂牌_NZD', '挂牌_CAD', '挂牌_CNH', '挂牌_IDR', '挂牌_THB']
+--- 元数据 first rows ---
+('项目', '内容')
+('抓取时间', '2026-05-12T01:57:36.562020+00:00')
+('Citibank 来源链接', 'https://www.citibank.com.sg/static/all-promo?lid=SGENCGGCGMITLAllpromo')
+max_row=51
+--- 新元定存促销 first rows ---
+('数据来源', '产品或客群', '起存金额_页面', '上限金额_页面', '资金区间_页面', '1M_pct', '3M_pct', '5M_pct', '6M_pct', '9M_pct', '12M_pct', '页面原文摘录')
+('Citibank', 'For New-To-Bank clients with Citigold Private Client and Citigold relationship:', 'S$350,000', 'S$10 million', 'S$350,000 to S$10 million', 'N/A', 1.5, 'N/A', 1.4, 'N/A', 'N/A', 'Enjoy up to 1.50% ^ p.a. on a 3-month SGD Time Deposit or up to 1.40% ^ p.a. on a 6-month SGD Time Deposit with new funds placement of S$350,000 to S$10 million. ^ T&Cs apply')
+('Citibank', 'For existing clients with Citigold Private Client relationship:', 'S$10,000', 'S$10 million', 'S$10,000 to S$10 million', 'N/A', 1.45, 'N/A', 1.35, 'N/A', 'N/A', 'Enjoy up to 1.45% # p.a. on a 3-month SGD Time Deposit or up to 1.35% # p.a. on a 6-month SGD Time Deposit with new funds placement of S$10,000 to S$10 million. # T&Cs apply')
+max_row=36
+--- 新元挂牌利率 first rows ---
+('数据来源', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '4M_pct', '5M_pct', '6M_pct', '7M_pct', '8M_pct', '9M_pct', '10M_pct', '11M_pct', '12M_pct', '18M_pct', '24M_pct', '36M_pct', '页面原文摘录')
+('CIMB', 'SGD FD Board — S$1,000-$99,999', 'N/A', 'N/A', 'Board: S$1,000 - $99,999', 'N/A', 'N/A', 0.2, 0.25, 0.3, 'N/A', 'N/A', 0.3, 'N/A', 'N/A', 0.3, 'N/A', 'N/A', 0.3, 0.3, 0.3, 'N/A', 'Note: *1-month and 2-month tenors may require min S$5,000 (see CIMB page).')
+('CIMB', 'SGD FD Board — S$100,000 & above', 'N/A', 'N/A', 'Board: S$100,000 & above', 'N/A', 'N/A', 0.2, 0.3, 0.35, 'N/A', 'N/A', 0.35, 'N/A', 'N/A', 0.35, 'N/A', 'N/A', 0.35, 0.35, 0.35, 'N/A', 'Note: *1-month and 2-month tenors may require min S$5,000 (see CIMB page).')
+max_row=66
+--- 外币定存促销 first rows ---
+('币种', '1M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '起存金额_页面', '上限金额_页面', '数据来源', '页面_1M原文')
+('USD', 3.25, 'N/A', 'N/A', 'N/A', 'N/A', 'USD 50,000', 'USD5 million', 'Citibank all-promo (1M FX TD)', '3.25%')
+('AUD', 3.5, 'N/A', 'N/A', 'N/A', 'N/A', 'USD 50,000', 'USD5 million', 'Citibank all-promo (1M FX TD)', '3.50%')
+max_row=94
+--- 外币定存备注 first rows ---
+('说明',)
+('Minimum deposit of USD 50,000 equivalent and maximum deposit of USD5 million equivalent.',)
+('* Citibank Foreign Currency FX Time Deposit Promotion terms and conditions apply.',)
+max_row=4
+--- 挂牌_USD first rows ---
+('USD 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '18M_pct', '24M_pct', '页面原文摘录')
+('HL Bank', 'USD', 'FCY FD Board — USD', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 2.9191, 'N/A', 3.0781, 3.0877, 'N/A', 3.1427, 'N/A', 'N/A', 'N/A')
+max_row=42
+--- 挂牌_AUD first rows ---
+('AUD 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '页面原文摘录')
+('HL Bank', 'AUD', 'FCY FD Board — AUD', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 3.5958, 'N/A', 3.8233, 3.9631, 'N/A', 4.1193, 'N/A')
+max_row=41
+--- 挂牌_EUR first rows ---
+('EUR 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '页面原文摘录')
+('HSBC', 'EUR', 'FCY TD Board — EUR — Personal Banking', 'N/A', 'N/A', 'EUR25,000 to EUR49,999', 'N/A', 'N/A', 0, 'N/A', 0, 0, 'N/A', 0, 'N/A')
+max_row=39
+--- 挂牌_GBP first rows ---
+('GBP 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '页面原文摘录')
+('HL Bank', 'GBP', 'FCY FD Board — GBP', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 3.0132, 'N/A', 3.275, 3.4236, 'N/A', 3.6293, 'N/A')
+max_row=41
+--- 挂牌_HKD first rows ---
+('HKD 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '页面原文摘录')
+('HL Bank', 'HKD', 'FCY FD Board — HKD', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 1.75, 'N/A', 1.996, 2.048, 'N/A', 2.2075, 'N/A')
+max_row=28
+--- 挂牌_JPY first rows ---
+('JPY 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '页面原文摘录')
+('HSBC', 'JPY', 'FCY TD Board — JPY — Personal Banking', 'N/A', 'N/A', 'JPY10,000,000 to JPY24,999,999', 'N/A', 'N/A', 0, 'N/A', 0, 0, 'N/A', 0, 'N/A')
+max_row=23
+--- 挂牌_CHF first rows ---
+('CHF 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '页面原文摘录')
+('HSBC', 'CHF', 'FCY TD Board — CHF — Personal Banking', 'N/A', 'N/A', 'CHF25,000 to CHF49,999', 'N/A', 'N/A', 0, 'N/A', 0, 0, 'N/A', 0, 'N/A')
+max_row=28
+--- 挂牌_NZD first rows ---
+('NZD 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '页面原文摘录')
+('HL Bank', 'NZD', 'FCY FD Board — NZD', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 1.7512, 'N/A', 2.009, 2.1655, 'N/A', 2.497, 'N/A')
+max_row=40
+--- 挂牌_CAD first rows ---
+('CAD 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '页面原文摘录')
+('HSBC', 'CAD', 'FCY TD Board — CAD — Personal Banking', 'N/A', 'N/A', 'CAD25,000 to CAD49,999', 'N/A', 'N/A', 0.32, 'N/A', 0.59, 0.68, 'N/A', 0.75, 'N/A')
+max_row=38
+--- 挂牌_CNH first rows ---
+('CNH 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '9M_pct', '12M_pct', '18M_pct', '24M_pct', '页面原文摘录')
+('HL Bank', 'CNH', 'FCY FD Board — CNH', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 0.1043, 'N/A', 0.2985, 0.3547, 'N/A', 0.4007, 'N/A', 'N/A', 'N/A')
+max_row=31
+--- 挂牌_IDR first rows ---
+('IDR 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '页面原文摘录')
+('DBS', 'IDR', "FCY FD Board — IDR — < 250'000", 'N/A', 'N/A', "< 250'000", 'N/A', 'N/A', 0, 0, 0, 0, 'N/A')
+max_row=5
+--- 挂牌_THB first rows ---
+('THB 外币挂牌利率', None, None, None, None, None, None, None, None, None, None, None, None)
+('数据来源', '币种', '产品或档位', '起存金额_页面', '上限金额_页面', '资金区间_页面', '7D_pct', '14D_pct', '1M_pct', '2M_pct', '3M_pct', '6M_pct', '页面原文摘录')
+('DBS', 'THB', "FCY FD Board — THB — < 2'500'000", 'N/A', 'N/A', "< 2'500'000", 'N/A', 'N/A', 0, 0, 0, 0, 'N/A')
+max_row=5

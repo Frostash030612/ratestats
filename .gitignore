@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+*.env.local
+
+# API keys & credentials（切勿提交）
+keys.txt
+keys.env
+**/ratestatsearch-*.json
+*credentials*.json
+*service*account*.json
+
+# 运行产物
+MarketRateData_*.xlsx
+*_AISearch.xlsx
+彩虹表*.xlsx
+rate_output_*.xlsx
+url_health_report_*.json
+
+# AI 对比缓存（保留目录结构）
+AI_Compare/raw_cache/*
+!AI_Compare/raw_cache/.gitkeep
+AI_Compare/results/*
+!AI_Compare/results/.gitkeep
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+Desktop.ini

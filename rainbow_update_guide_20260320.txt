@@ -1,0 +1,39 @@
+彩虹表更新指南 - 20260320
+================================================================================
+
+文件清单:
+  1. 彩虹表文件: 彩虹表_自动生成_20260320.xlsx
+  2. 数据提取脚本: extract_all_data_20260320.py
+  3. 本指南: rainbow_update_guide_20260320.txt
+
+彩虹表结构:
+----------------------------------------
+Sheet1: SGD Promotional Rate (新元促销利率)
+  - 数据源: MarketRateData11的'SGD促销'sheet
+  - 银行顺序: ICBC, BOC, SingFinance, HSBC, OCBC, BEA, CIMB, RHB, HLB, Maybank, HLF, UOB, SCB, DBS/POSB
+  - 格式: 每个银行多行，支持变体
+  - 颜色: 红(≥1.40%) → 橙 → 黄 → 绿 → 蓝 → 紫
+
+Sheet2: SGD Board Rate (新元挂牌利率)
+  - 数据源: MarketRateData11的'SGD挂牌'sheet
+  - 格式: 按期限分列 (7D, 1M, 2M, 3M, ..., 36M)
+  - 按金额分级显示
+
+Sheet3: SGD Board Rate Ranked (新元挂牌利率排名)
+  - 数据源: 基于Sheet2数据生成
+  - 生成方法: 对每个期限排序，显示前5名
+
+Sheet6: USD Rate + Other Currency Rates (美元和其他货币利率)
+  - 数据源: USD促销 + USD挂牌 + 其他外币促销利率 + 各货币挂牌
+  - 格式: 按货币分类显示
+
+操作步骤:
+================================================================================
+1. 运行数据提取:
+   python3 extract_all_data_20260320.py
+2. 复制上面的命令提取数据
+3. 打开Excel文件:
+   彩虹表_自动生成_20260320.xlsx
+4. 按sheet更新数据
+5. 应用颜色标注
+6. 保存文件

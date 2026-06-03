@@ -1,0 +1,10 @@
+# 复制本文件为 keys.txt，填入你的 Key（勿提交 Git、勿发给别人）
+# 格式：变量名=值，每行一个；# 开头为注释
+
+SERPER_API_KEY=在这里粘贴你的serper_key
+BRAVE_API_KEY=
+TAVILY_API_KEY=
+# BING_API_KEY=
+
+# Vertex 一般不用写（默认用 RateStats_Portable/assets 下的 JSON）
+# GOOGLE_APPLICATION_CREDENTIALS=C:\Users\xuwenzhe\Desktop\RateStats\RateStats_Portable\assets\ratestatsearch-f5f95dab974f.json

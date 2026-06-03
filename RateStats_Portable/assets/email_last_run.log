@@ -1,0 +1,31 @@
+---- 鍛ㄤ笁 2026/05/13  9:20:34.24 DATE_TAG=20260513 ----
+choice_errorlevel=1
+result=attempt_send
+result=send_failed
+---- 鍛ㄤ笁 2026/05/13  9:40:10.61 DATE_TAG=20260513 ----
+choice_errorlevel=1
+result=attempt_send
+result=send_ok
+---- 鍛ㄤ笁 2026/05/13 14:00:39.34 DATE_TAG=20260513 ----
+choice_errorlevel=1
+result=attempt_send
+result=send_ok
+---- 鍛ㄥ洓 2026/05/14 16:28:50.87 DATE_TAG=20260514 RUN_TAG=20260514_16.24 ----
+choice_errorlevel=1 
+result=attempt_send 
+result=send_ok 
+---- 鍛ㄥ洓 2026/05/14 16:50:19.39 DATE_TAG=20260514 RUN_TAG=20260514_16.46 ----
+choice_errorlevel=1 
+result=attempt_send 
+result=send_ok 
+---- 鍛ㄥ洓 2026/05/14 17:20:12.55 DATE_TAG=20260514 RUN_TAG=20260514_17.16 ----
+choice_errorlevel=1 
+result=attempt_send 
+result=send_ok 
+---- 鍛ㄥ洓 2026/05/14 18:03:45.96 DATE_TAG=20260514 RUN_TAG=20260514_18.00 ----
+choice_errorlevel=1 
+result=attempt_send 
+result=send_ok 
+---- 2026/05/15 周五 16:33:03.98 [06] DATE_TAG=20260515 RUN_TAG=20260515_16.28 ----
+---- 2026/05/26 周二 17:47:39.20 [06] DATE_TAG=20260526 RUN_TAG=20260526_17.40 ----
+---- 2026/05/27 周三 18:51:33.29 [06] DATE_TAG=20260527 RUN_TAG=20260527_18.48 ----

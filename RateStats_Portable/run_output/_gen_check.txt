@@ -1,0 +1,9 @@
+FAIL_COUNT=1
+FAIL | Maybank 新元定存促销页面 | 抓取失败: ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))
+--- key meta ---
+META | Maybank 新元定存促销页 | https://www.maybank2u.com.sg/en/promotions/deposits/sgd-time-deposit.page
+META | 工行新加坡 定存促销页 | https://singapore.icbc.com.cn/en/page/721854535525236736.html
+META | 工行新加坡 SGD 挂牌利率页 | https://singapore.icbc.com.cn/en/page/721852523895095311.html
+META | Maybank SGD 挂牌利率页 | https://sslsecure.maybank.com.sg/cgi-bin/mbs/JSPscripts/mbb_rates/deposit_rate.jsp
+META | Maybank 外币挂牌利率页 | https://sslsecure.maybank.com.sg/cgi-bin/mbs/JSPscripts/mbb_rates/deposit_rate.jsp
+META | Maybank 新元定存促销页面 | 抓取失败: ('Connection aborted.', ConnectionResetError(10054, '远程主机强迫关闭了一个现有的连接。', None, 10054, None))
