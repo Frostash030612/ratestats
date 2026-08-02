@@ -107,8 +107,12 @@ def run(
     gold = load_gold(gp)
     print(f"[INFO] 黄金答案: {gp} ({len(gold)} 条 dest)")
     ts = datetime.now().strftime("%Y%m%d_%H.%M")
-    results_dir = _THIS_DIR / "results"
-    raw_dir = _THIS_DIR / "raw_cache" / ts
+    from project_paths import get_runs_root, parse_run_date_tag
+
+    date_tag = parse_run_date_tag(ts) or datetime.now().strftime("%Y%m%d")
+    eval_root = get_runs_root() / "ai_eval" / date_tag
+    results_dir = eval_root
+    raw_dir = get_runs_root() / "ai_eval_raw_cache" / date_tag / ts
     results_dir.mkdir(parents=True, exist_ok=True)
     raw_dir.mkdir(parents=True, exist_ok=True)
 

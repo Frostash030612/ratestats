@@ -10,7 +10,7 @@ if not exist "models\url_ranker.joblib" (
   exit /b 1
 )
 
-%PY% evaluate_picker.py --reports-dir "..\RateStats_Portable\assets"
+%PY% evaluate_picker.py
 if errorlevel 1 goto :err
 
 echo.

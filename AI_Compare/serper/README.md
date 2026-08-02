@@ -19,7 +19,7 @@ $env:SERPER_HL = "en"    # 可选，默认 en
 ## 怎么跑
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare\serper
+cd AI_Compare\serper
 
 # 1. 单条冒烟
 python test_serper_search.py

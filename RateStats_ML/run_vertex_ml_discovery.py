@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from _portable import DEFAULT_MANUAL_XLSX, MODEL_DIR, OUTPUT_DIR, PORTABLE_DIR
+from _portable import DEFAULT_MANUAL_XLSX, MODEL_DIR, PORTABLE_DIR, RUNS_ROOT
 from picker import pick_best_url_ml
 
 if str(PORTABLE_DIR) not in sys.path:
@@ -122,7 +122,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--manual", default=str(DEFAULT_MANUAL_XLSX), help="训练/回退用的手动配置")
     ap.add_argument("--model", default=str(MODEL_DIR / "url_ranker.joblib"))
     ap.add_argument("--discover-only", action="store_true")
-    ap.add_argument("--out-dir", default=str(OUTPUT_DIR))
+    ap.add_argument(
+        "--out-dir",
+        default=str(RUNS_ROOT),
+        help="批次输出根目录（默认项目 runs/；实际写入 runs/<run-tag>/）",
+    )
     ap.add_argument("--run-tag", default=None)
     ap.add_argument("--sleep", type=float, default=0.4)
     ap.add_argument("--fetch", action="store_true", help="发现后抓取 Market（需模型与配置就绪）")

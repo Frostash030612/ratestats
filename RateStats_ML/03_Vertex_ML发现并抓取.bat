@@ -12,12 +12,14 @@ if not exist "models\url_ranker.joblib" (
 
 for /f "delims=" %%I in ('powershell -NoProfile -Command "(Get-Date).ToString('yyyyMMdd_HH.mm')"') do set "TAG=%%I"
 
-echo Vertex + ML 选链，输出到 output\%TAG%\
-%PY% run_vertex_ml_discovery.py --run-tag %TAG% --fetch
+for /f "delims=" %%I in ('powershell -NoProfile -Command "(Get-Date).ToString('yyyyMMdd')"') do set "DATE_TAG=%%I"
+set "RUN_TAG=%TAG%"
+echo Vertex + ML 选链，输出到 ..\runs\%DATE_TAG% 或 runs\%%RUN_TAG%%
+%PY% run_vertex_ml_discovery.py --run-tag %DATE_TAG% --fetch
 if errorlevel 1 goto :err
 
 echo.
-echo 完成: output\%TAG%\url_params_ai_ml.xlsx
+echo 完成: ..\runs\%DATE_TAG%\url_params_ai_ml.xlsx
 goto :done
 
 :err

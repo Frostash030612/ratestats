@@ -264,7 +264,11 @@ def main() -> int:
     ap.add_argument("--out-dir", default=None)
     ap.add_argument("--tol", type=float, default=0.011, help="利率容差（百分点）")
     args = ap.parse_args()
-    out = Path(args.out_dir) if args.out_dir else _THIS / "results"
+    out = Path(args.out_dir) if args.out_dir else None
+    if out is None:
+        from project_paths import compare_out_dir
+
+        out = compare_out_dir()
     try:
         run_compare(Path(args.manual), Path(args.ai), out, tol=args.tol)
         return 0

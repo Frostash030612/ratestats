@@ -14,6 +14,8 @@ def normalize_url(u: str) -> str:
     p = urlparse(s)
     scheme = (p.scheme or "https").lower()
     netloc = p.netloc.lower()
+    if netloc.startswith("www."):
+        netloc = netloc[4:]
     path = (p.path or "/").rstrip("/")
     if not path:
         path = "/"
@@ -44,6 +46,35 @@ def hit_at_k(rank: int, k: int) -> int:
 def mrr(rank: int) -> float:
     """Mean Reciprocal Rank：1/rank，未命中为 0。"""
     return 1.0 / rank if rank > 0 else 0.0
+
+
+def picker_url_hit(
+    dest: str,
+    picked: str,
+    gold: str,
+    *,
+    candidates: list[str] | None = None,
+    gold_companion: str = "",
+) -> int:
+    """
+    选链是否算命中。
+    BOC：与手动抓取一致，以栏目置顶链为参考（非 url_params 里可能过期的固定 html）。
+    其它 dest：normalize 后与黄金链完全一致。
+    """
+    if dest in ("boc_url", "boc_board_url"):
+        try:
+            from boc_url_resolve import boc_reference_url_for_eval
+
+            ref = boc_reference_url_for_eval(
+                dest,
+                configured_url=gold,
+                companion_url=gold_companion,
+                candidates=candidates,
+            )
+            return 1 if normalize_url(picked) == normalize_url(ref) else 0
+        except Exception:
+            pass
+    return 1 if normalize_url(picked) == normalize_url(gold) else 0
 
 
 def same_host_rank(gold: str, candidates: list[str]) -> int:

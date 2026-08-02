@@ -13,12 +13,16 @@ from typing import Dict
 # 友好 key -> argparse dest 的别名映射。
 # 说明：脚本只关心最终 dest（例如 `boc_board_url`）；友好 key 仅是为了方便维护配置。
 URL_KEY_ALIASES: Dict[str, str] = {
-    # Citibank: 主页同时覆盖 SGD/FCY 定存“促销基础”
+    # Citibank: 定存产品页同时覆盖 SGD/USD 定存促销（取代旧 all-promo 页）
     "CITIBANK 新币促销利率": "url",
     "CITIBANK 外币促销利率": "url",
     "CITIBANK 促销利率": "url",
+    "CITIBANK 新元美元促销页": "url",
+    "CITIBANK 定存促销页": "url",
     "citi_url": "url",
     "citibank_url": "url",
+    "citi_fd_promo_url": "url",
+    "citi_fd_promo_ref_url": "url",
     # CIMB
     "CIMB 新币促销利率": "cimb_sgd_url",
     "CIMB 外币促销利率": "cimb_url",

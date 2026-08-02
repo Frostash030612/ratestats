@@ -5,13 +5,14 @@ from __future__ import annotations
 
 import random
 from pathlib import Path
-from typing import Iterator
 from urllib.parse import urlparse, urlunparse
 
 import pandas as pd
 
 from _portable import DEFAULT_MANUAL_XLSX, DATA_DIR, PORTABLE_DIR
 from features import extract_features, FEATURE_NAMES
+from hard_negatives import build_hard_negative_rows
+from ml_discovery_dirs import iter_discovery_reports
 
 # 触发 Portable imports
 import sys
@@ -112,7 +113,28 @@ def build_training_rows(
     return rows
 
 
-def rows_with_features(rows: list[dict]) -> tuple[list[list[float]], list[int], list[dict]]:
+def build_full_training_rows(
+    gold: dict[str, str],
+    *,
+    use_hard_negatives: bool = True,
+    negatives_per_dest: int = 8,
+    seed: int = 42,
+) -> list[dict]:
+    """黄金正负样本 + 可选典型错链负样本。"""
+    rows = build_training_rows(gold, negatives_per_dest=negatives_per_dest, seed=seed)
+    if use_hard_negatives:
+        rows.extend(build_hard_negative_rows(gold))
+    return rows
+
+
+def rows_with_features(
+    rows: list[dict],
+    *,
+    drop_rule_score: bool = False,
+) -> tuple[list[list[float]], list[int], list[dict], tuple[str, ...]]:
+    from features import active_feature_names
+
+    names = active_feature_names(drop_rule_score=drop_rule_score)
     X, y, meta = [], [], []
     for r in rows:
         feats = extract_features(
@@ -121,10 +143,10 @@ def rows_with_features(rows: list[dict]) -> tuple[list[list[float]], list[int], 
             reference_url=r["reference_url"],
             candidate_rank=int(r.get("candidate_rank", 0)),
         )
-        X.append([feats[k] for k in FEATURE_NAMES])
+        X.append([feats[k] for k in names])
         y.append(int(r["label"]))
         meta.append(r)
-    return X, y, meta
+    return X, y, meta, names
 
 
 def load_discovery_report_rows(path: Path) -> list[dict]:
@@ -159,17 +181,6 @@ def load_discovery_report_rows(path: Path) -> list[dict]:
                 }
             )
     return rows
-
-
-def iter_discovery_reports(search_dirs: list[Path]) -> Iterator[Path]:
-    seen: set[str] = set()
-    for d in search_dirs:
-        if not d.is_dir():
-            continue
-        for p in sorted(d.glob("ai_search_discovered_*.xlsx")):
-            if p.name not in seen:
-                seen.add(p.name)
-                yield p
 
 
 def save_dataset_csv(rows: list[dict], path: Path) -> None:

@@ -12,10 +12,10 @@ Vertex AI Search 完整脚本副本（**仅用于参考 / 独立测试**，不�
 **完整 URL 发现**（选链 / 打分与 Serper 等共用 `RateStats_Portable/url_discovery_pick.py`）请用主目录脚本，勿在本子目录维护第二份逻辑：
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\RateStats_Portable
+cd RateStats_Portable
 python vertex_url_discovery.py
 # 或
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare
+cd AI_Compare
 python run_all_providers_market.py --providers vertex --discover-only
 ```
 
@@ -24,7 +24,7 @@ python run_all_providers_market.py --providers vertex --discover-only
 ### 1. 单条搜索冒烟测试
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare\vertex
+cd AI_Compare\vertex
 python test_vertex_search.py
 ```
 

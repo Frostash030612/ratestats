@@ -1,0 +1,274 @@
+================================================================================
+RateStats 系统维护说明（文件职责与故障定位）
+================================================================================
+
+文档用途
+  供系统维护人员在不具备编程背景的情况下，明确各目录与核心源码的职责边界，
+  并在发生故障时按既定顺序定位应检查或修改的位置。
+
+维护基本原则
+  1. 日常维护优先调整配置文件，非必要不修改源代码。
+  2. 发生异常时，应首先依据本文「现象与处理对应表」排查，避免无序翻阅全部脚本。
+  3. 确需修改源代码时，请事先备份拟修改文件。
+  4. 如对修改范围或影响不确定，应仅调整 assets 目录及密钥相关配置，并及时咨询技术人员。
+
+
+================================================================================
+一、目录结构及职责
+================================================================================
+
+路径均相对于 RateStats 项目根目录。
+
+  assets/
+      配置与密钥存放目录。含银行 URL、邮件参数、定时参数、Vertex 服务账号 JSON、
+      Excel 模板等。为日常维护的主要操作对象。
+
+  bin_mac/
+      macOS 运行入口（*.command）。实际 Shell 脚本位于 bin_mac/sh/。
+
+  RateStats_Portable/bin/
+      Windows 运行入口（*.bat）。
+
+  RateStats_Portable/src/
+      便携包 Python 源码目录。一般运行无需修改；仅在抓取逻辑、表格生成或系统
+      集成出现缺陷且配置调整无效时介入。
+
+  RateStats_Portable/docs/
+      详细技术说明与安装说明（偏技术向）。
+
+  AI_Compare/
+      多搜索引擎对比模块。API 密钥文件 keys.txt 位于本目录。
+
+  RateStats_ML/
+      机器学习选链模块。非主流程日常维护所必需。
+
+  runs/
+      程序运行产物目录（Excel、日志等）。由系统自动生成，勿作为配置修改对象。
+
+
+================================================================================
+二、日常配置维护（无需修改源代码）
+================================================================================
+
+（1）银行网址错误或某机构无法抓取
+      修改：assets/url_params.xlsx
+      修改后重新执行「03」或「06」流程。
+      说明：程序可能会同步生成 url_params.json；应以 xlsx 为维护主文件。
+
+（2）邮件收件人、SMTP 及授权信息
+      方式一：执行「打开配置界面」
+      方式二：直接编辑 assets/email_params.log
+
+（3）定时执行时间
+      方式一：通过配置界面调整
+      方式二：编辑 assets/schedule_params.log
+      重要：保存参数后，必须在 macOS 上再次执行「注册定时任务」，方可写入系统。
+      说明：设备处于睡眠或关机状态时，到点任务通常不会执行。
+
+（4）搜索引擎 API Key（Serper / Brave / Tavily 等）
+      方式一：执行「打开API钥匙设置」
+      方式二：编辑 AI_Compare/keys.txt
+
+（5）更换 Vertex AI 服务账号密钥
+      将新的 JSON 文件置于 assets/ 目录；
+      在「API钥匙设置」中选择「选择 JSON…」完成登记；
+      或在 keys.txt 中设置：
+        GOOGLE_APPLICATION_CREDENTIALS=../assets/（文件名）.json
+
+（6）查阅运行结果与失败信息
+      结果文件：runs/（按日期分类的子目录）
+      日志文件：runs/logs/
+      定时任务相关日志通常包括 launchd_stdout.log、launchd_stderr.log
+
+
+================================================================================
+三、运行入口说明
+================================================================================
+
+Windows：RateStats_Portable/bin/
+macOS：RateStats/bin_mac/（建议使用 *.command）
+
+  01_首次安装依赖
+      安装运行所需 Python 依赖。新环境部署或提示缺少模块时执行。
+
+  02_一键生成Excel
+      仅依据手动 URL 配置生成 Market 利率数据表。
+
+  03_一键生成Market+彩虹表
+      手动抓取并生成 Market 数据表与彩虹表（常用）。
+
+  04_一键巡检URL
+      检查配置网址的可访问性。
+
+  05（AI 搜索相关）
+      执行 Vertex AI 搜索与相关抓取。
+
+  06_一键生成Market彩虹表与AI搜索
+      完整流程：手动抓取、AI 搜索、结果对比及可选邮件发送。
+
+  打开配置界面
+      维护邮件与定时参数。
+
+  打开API钥匙设置
+      维护搜索引擎密钥及 Vertex JSON 路径。
+
+  注册定时任务
+      将定时配置注册为 macOS LaunchAgent（仅保存配置文件不足以生效）。
+
+  立即执行完整流程
+      立即执行与定时任务相同的完整流水线。
+
+
+================================================================================
+四、现象与处理对应表
+================================================================================
+
+现象                                    建议处理顺序
+--------------------------------------------------------------------------------
+提示缺少模块（如 No module named …）     重新执行「01_首次安装依赖」
+
+单一银行数据为空或结果仍为旧站点         1. 核对 assets/url_params.xlsx 中该行 URL
+                                        2. 使用浏览器验证网页是否改版或失效
+                                        3. 仍无效时，按第五节「抓取与解析」检查源码
+
+多家银行同时失败                         1. 确认网络连通及策略限制
+                                        2. 重试运行并查阅 runs 日志
+                                        3. 检查 bank_fetch_and_extract.py
+
+单一银行数据解析错误或数值异常           1. 核对 url_params 中 URL 是否正确
+                                        2. 检查 src/bank_extractors/impl.py
+                                           （对应该银行的解析实现）
+
+已生成 Excel 但列为空或列错位             1. 检查 assets/MarketRateData_template.xlsx
+                                        2. 检查 bank_excel_data_builder.py
+                                        3. 检查 bank_excel_template_writer.py
+
+彩虹表未更新或无法匹配银行               1. 确认 MarketRateData 已成功生成
+                                        2. 检查 generate_rainbow_from_market.py
+                                        3. 视情况检查 create_rainbow_*.py
+
+Vertex / AI 鉴权失败或无结果             1. 确认 assets 中 JSON 是否存在
+                                        2. 核对 API 钥匙设置或 keys.txt 路径
+                                        3. 检查 run_market_rate_ai_search.py
+                                        4. 检查 vertex_search_client.py
+
+手动结果与 AI 结果对比失败               1. 确认两侧 Excel 均已生成
+                                        2. 检查 compare_vertex_market.py
+                                        3. 检查 AI_Compare/compare_market_data.py
+
+邮件发送失败                             1. 核对 email_params.log
+                                        2. 通过配置界面重新保存
+                                        3. 检查 send_report_email.py
+
+macOS 定时任务未执行                     1. 确认是否已执行「注册定时任务」
+                                        2. 确认到点时设备未处于睡眠或关机
+                                        3. 终端执行：launchctl list | grep ratestats
+                                        4. 必要时检查 register_mac_schedule.py
+
+
+================================================================================
+五、源代码分区说明
+================================================================================
+
+默认路径：RateStats_Portable/src/
+
+（一）流程入口
+  market_rate_data_generator.py       生成 Market 利率总表
+  generate_rainbow_from_market.py     依据 Market 数据生成彩虹表
+  run_market_rate_ai_search.py        AI / Vertex 搜索与抓取入口
+  compare_vertex_market.py            手动结果与 Vertex 结果对比
+  send_report_email.py                报告邮件发送
+  register_mac_schedule.py            macOS 定时任务注册与卸载
+  config_gui.py / keys_gui.py         图形配置界面
+  project_paths.py                    路径约定（assets、runs 等），非必要勿改
+
+（二）抓取与解析（抓取类故障重点关注）
+  bank_fetch_and_extract.py           抓取总调度
+  bank_extractors/impl.py             各银行网页解析实现（站点改版时最常调整）
+  bank_all_promo_rates.py             抓取、组表与输出的编排
+  bank_constants.py                   公共常量
+  bank_safety.py                      异常处理与降级策略（请谨慎修改）
+
+（三）URL 配置加载
+  url_config_loader.py                读取 url_params.xlsx / json
+  url_defaults.py                     内置默认 URL
+  url_key_aliases.py                  配置键名映射（配置已改但不生效时检查）
+  sync_url_params_to_json.py          xlsx 与 json 同步
+
+（四）Excel 生成
+  bank_excel_data_builder.py          将抓取结果整理为表结构
+  bank_excel_template_writer.py       按模板写入 Excel
+  bank_output_stage.py                结果落盘
+  assets/MarketRateData_template.xlsx 表结构模板
+
+（五）彩虹表
+  generate_rainbow_from_market.py
+  generate_rainbow_from_bank.py
+  create_rainbow_*.py
+
+（六）Vertex / AI（Portable 内）
+  vertex_search_client.py             Vertex 接口调用
+  vertex_url_discovery.py             利率页面发现
+  test_vertex_search.py               Vertex 连通性测试
+
+（七）AI_Compare 目录
+  AI_Compare/keys.txt                 API 密钥
+  AI_Compare/compare_market_data.py   对比逻辑（完整流程中的对比环节依赖）
+  AI_Compare/providers/               各搜索引擎对接实现
+
+
+================================================================================
+六、抓取故障标准排查流程
+================================================================================
+
+  步骤 1  使用浏览器打开 url_params.xlsx 中对应银行的 URL，确认页面可访问且内容有效。
+          若页面失效或改版，应先更新 URL，再重新执行流程。
+
+  步骤 2  查阅 runs 目录下当日输出及终端/日志中的错误信息，记录银行名称及错误类型
+         （如超时、解析结果为空等）。
+
+  步骤 3  若仅更新 URL 仍无法解决：
+          打开 RateStats_Portable/src/bank_extractors/impl.py，
+          按银行标识检索对应解析函数（通常因网页结构变更所致）。
+          该项修改建议由具备一定网页结构知识的人员执行。
+
+  步骤 4  若仍无法判断修改范围：
+          请保留银行名称、当前 URL、错误截图及 runs 中相关文件，提交技术人员处理。
+          请勿在不明确影响的情况下随意修改源码。
+
+
+================================================================================
+七、维护注意事项
+================================================================================
+
+  1. 请勿删除 assets、src、bin_mac、bin 等运行所必需的目录。
+  2. 请优先维护 url_params.xlsx，避免直接手工改写 url_params.json。
+  3. 请勿随意调整 bank_safety.py 中的异常处理策略，以免掩盖真实错误。
+  4. Vertex JSON、keys.txt、邮箱授权信息属于敏感资料，不得通过不可控渠道扩散。
+  5. 自 Windows 复制至 macOS 的脚本若无法执行，请在相应目录执行：
+       chmod +x *.command sh/*.sh
+
+
+================================================================================
+八、相关延伸文档
+================================================================================
+
+  RateStats_Portable/docs/README_使用说明.txt
+  RateStats_Portable/docs/README_mac.md
+  RateStats_Portable/docs/维护文档_文件职责.md
+  RateStats_Portable/docs/接入新银行指南_维护版.md
+  RateStats_Portable/docs/URL巡检清单.md
+
+
+================================================================================
+九、摘要
+================================================================================
+
+  日常维护以 assets 与密钥配置为主。
+  抓取异常应先核查 URL，再核查 bank_extractors/impl.py。
+  表格结构异常应核查 Excel 模板及 bank_excel_* 相关脚本。
+  AI、邮件与定时问题应分别核查 Vertex JSON、email_params 及定时任务注册状态。
+
+================================================================================
+文档版本日期：2026-07-15
+================================================================================

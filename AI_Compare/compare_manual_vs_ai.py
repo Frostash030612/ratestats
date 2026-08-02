@@ -12,8 +12,9 @@ import pandas as pd
 
 _THIS = Path(__file__).resolve().parent
 _PORTABLE = _THIS.parent / "RateStats_Portable"
-if str(_PORTABLE) not in sys.path:
-    sys.path.insert(0, str(_PORTABLE))
+_SRC = _PORTABLE / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
 
 from url_config_loader import load_url_config  # noqa: E402
 from url_key_aliases import URL_KEY_ALIASES  # noqa: E402
@@ -110,12 +111,22 @@ def main() -> int:
     """CLI：--manual 与 --ai 两份 URL 配置表对比。"""
     ap = argparse.ArgumentParser()
     ap.add_argument("--manual", required=True, help="url_YYYYMMDD.xlsx（手动 Market 快照）")
-    ap.add_argument("--ai", default=None, help="url_params_ai.xlsx，默认 assets/url_params_ai.xlsx")
-    ap.add_argument("--out-dir", default=None, help="输出目录，默认 AI_Compare/results")
+    ap.add_argument("--ai", default=None, help="url_params_ai.xlsx，默认 runs 下最新")
+    ap.add_argument("--out-dir", default=None, help="输出目录，默认 runs/YYYYMMDD/compare/")
     args = ap.parse_args()
     manual = Path(args.manual)
-    ai = Path(args.ai) if args.ai else _PORTABLE / "assets" / "url_params_ai.xlsx"
-    out_dir = Path(args.out_dir) if args.out_dir else _THIS / "results"
+    if args.ai:
+        ai = Path(args.ai)
+    else:
+        from project_paths import ASSETS_DIR, find_latest_url_params_ai
+
+        ai = find_latest_url_params_ai() or (ASSETS_DIR / "url_params_ai.xlsx")
+    if args.out_dir:
+        out_dir = Path(args.out_dir)
+    else:
+        from project_paths import compare_out_dir
+
+        out_dir = compare_out_dir()
     if not manual.is_file():
         print(f"[ERROR] 不存在: {manual}", file=sys.stderr)
         return 1

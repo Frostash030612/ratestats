@@ -5,8 +5,8 @@ Keeping these in a separate module makes the main script easier to read.
 """
 
 DEFAULT_URL = (
-    "https://www.citibank.com.sg/static/all-promo"
-    "?lid=SGENCGGCGMITLAllpromo"
+    "https://www.citibank.com.sg/personal-banking/deposits/fixed-deposit-account"
+    "?icid=SGENCBGBAMITLCitiTimeDeposits&ecid=PSGONSGWFAENDB&lid=SGENCBGBAMITALAccountsAndDeposits"
 )
 
 DEFAULT_CIMB_FCY_URL = (
@@ -29,8 +29,9 @@ DEFAULT_HLF_FD_URL = (
 DEFAULT_HSBC_TD_URL = (
     "https://www.hsbc.com.sg/zh-sg/accounts/products/time-deposit/"
 )
+# 官网已改版为 /en/column/ 路径；Fixed Deposit 栏目同页含促销 + 挂牌表。
 DEFAULT_ICBC_FD_URL = (
-    "https://singapore.icbc.com.cn/en/page/721854535525236736.html"
+    "https://singapore.icbc.com.cn/en/column/1438059017468788838.html"
 )
 DEFAULT_OCBC_FD_URL = (
     "https://www.ocbc.com/personal-banking/deposits/fixed-deposit-account"
@@ -78,6 +79,10 @@ DEFAULT_BOC_PROMO_URL = (
 DEFAULT_CITI_SGD_BOARD_URL = (
     "https://www.citibank.com.sg/personal-banking/deposits/fixed-deposit-account"
 )
+DEFAULT_CITI_FD_PROMO_URL = (
+    "https://www.citibank.com.sg/personal-banking/deposits/fixed-deposit-account"
+    "?icid=SGENCBGBAMITLCitiTimeDeposits&ecid=PSGONSGWFAENDB&lid=SGENCBGBAMITALAccountsAndDeposits"
+)
 DEFAULT_DBS_SGD_BOARD_URL = (
     "https://www.dbs.com.sg/personal/rates-online/fixed-deposit-rate-singapore-dollar.page"
 )
@@ -91,7 +96,7 @@ DEFAULT_HSBC_SGD_BOARD_URL = (
     "https://www.hsbc.com.sg/rates/singapore-dollar-deposits/"
 )
 DEFAULT_ICBC_SGD_BOARD_URL = (
-    "https://singapore.icbc.com.cn/en/page/721852523895095311.html"
+    "https://singapore.icbc.com.cn/en/column/1438059017468788838.html"
 )
 # 与 SGD 挂牌同页：含 Amount(USD)、Amount(RMB) 等外币挂牌表。
 DEFAULT_ICBC_FCY_BOARD_URL = DEFAULT_ICBC_SGD_BOARD_URL

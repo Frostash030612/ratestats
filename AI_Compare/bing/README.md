@@ -48,7 +48,7 @@ $env:BING_MKT      = "en-SG"                                       # 可选
 ## 怎么跑（拿到旧 key 之后）
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare\bing
+cd AI_Compare\bing
 
 # 1. 单条冒烟测试
 python test_bing_search.py

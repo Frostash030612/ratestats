@@ -76,7 +76,10 @@ def _icbc_singapore_get(sess: requests.Session, url: str, timeout: float) -> req
     s2.headers.update(sess.headers)
     s2.trust_env = sess.trust_env
     s2.mount(f"{scheme}://{host}", _IcbcTlsAdapter())
-    return s2.get(u, timeout=timeout)
+    resp = s2.get(u, timeout=timeout)
+    # 工行响应常缺 charset，requests 会落成 ISO-8859-1，全角标点会变成 ï¼/ï¼ 乱码。
+    resp.encoding = resp.apparent_encoding or "utf-8"
+    return resp
 
 
 def _find_column_cmp_text(
@@ -1667,6 +1670,19 @@ def extract_bea_sgd_board_from_json(data: Dict[str, Any]) -> List[Dict[str, Any]
     if not isinstance(payload_rows, list) or not payload_rows:
         return rows
     timestamp = str(root.get("timestamp") or "")
+    # 首行 TB2R1 为各档金额区间（非 tenor），后续行为期限利率。
+    tier_labels: List[str] = []
+    for item in payload_rows:
+        if not isinstance(item, str) or "=" not in item:
+            continue
+        rhs = item.split("=", 1)[1]
+        parts = [p.strip() for p in rhs.split(";") if p.strip()]
+        if not parts:
+            continue
+        if "month" not in parts[0].lower():
+            tier_labels = parts[:4]
+            break
+
     for item in payload_rows:
         if not isinstance(item, str) or "=" not in item:
             continue
@@ -1684,8 +1700,14 @@ def extract_bea_sgd_board_from_json(data: Dict[str, Any]) -> List[Dict[str, Any]
         if not rk:
             continue
         for i, rate_txt in enumerate(parts[1:5], start=1):
-            r = _empty_sgd_board_row("BEA", f"SGD FD Board — Tier {i}")
-            r["placement_range_text"] = f"Tier {i}"
+            tier_label = (
+                tier_labels[i - 1]
+                if i - 1 < len(tier_labels) and tier_labels[i - 1]
+                else f"Tier {i}"
+            )
+            r = _empty_sgd_board_row("BEA", f"SGD FD Board — {tier_label}")
+            r["placement_range_text"] = tier_label
+            r["min_amount_text"] = tier_label
             r["page_raw"] = timestamp
             pv = _parse_board_rate_cell(rate_txt)
             if pv is not None:
@@ -1727,8 +1749,10 @@ def extract_bea_fcy_board_from_json(data: Dict[str, Any]) -> List[Dict[str, Any]
             if not re.match(r"^[A-Z]{3}$", cur):
                 continue
             r = _empty_fx_board_row("BEA", cur, f"FCY FD {arr_name} Rates — {cur}")
-            r["placement_range_text"] = arr_name
-            r["min_amount_text"] = parts[2] or NA
+            min_amt = parts[2] or NA
+            # 条件用金额，不用笼统的 Board/Tier；便于彩虹表 Amount 列展示。
+            r["placement_range_text"] = min_amt if min_amt not in (None, "", NA) else arr_name
+            r["min_amount_text"] = min_amt
             r["page_raw"] = timestamp
             # endpoint order: 1w,1m,2m,3m,6m,12m
             keys = [
@@ -1811,8 +1835,17 @@ def append_bea_fcy_promo_rows(
     """
     if not bea_fcy_board_rows:
         return fx_rows
-    tier_rows = [r for r in bea_fcy_board_rows if str(r.get("placement_range_text")) == "Tier"]
-    src_rows = tier_rows or [r for r in bea_fcy_board_rows if str(r.get("placement_range_text")) == "Board"]
+    # product_line 形如 "FCY FD Tier Rates — USD" / "FCY FD Board Rates — USD"
+    tier_rows = [
+        r
+        for r in bea_fcy_board_rows
+        if "tier" in str(r.get("product_line") or "").lower()
+    ]
+    src_rows = tier_rows or [
+        r
+        for r in bea_fcy_board_rows
+        if "board" in str(r.get("product_line") or "").lower()
+    ]
     if not src_rows:
         return fx_rows
     out = list(fx_rows)
@@ -2685,13 +2718,13 @@ def append_icbc_fx_rows(
                 continue
             out.append(
                 {
-                    "currency": f"USD ({title})",
+                    "currency": "USD",
                     "rate_1m": _rate_or_na(rr.get("1m")),
                     "rate_3m": _rate_or_na(rr.get("3m")),
                     "rate_6m": _rate_or_na(rr.get("6m")),
+                    "rate_9m": _rate_or_na(rr.get("9m")),
                     "rate_12m": _rate_or_na(rr.get("12m")),
-                    "min_deposit_text": icbc.get("usd_min_note")
-                    or "USD500+ (e-banking); USD20,000 (counter)",
+                    "min_deposit_text": title,
                     "max_deposit_text": NA,
                     "page_text_1m": eff_s.strip() or NA,
                     "data_source": f"ICBC SG FD promo (USD) — {title}{eff_s}",
@@ -2707,19 +2740,17 @@ def append_icbc_fx_rows(
         min_txt = icbc.get("rmb_min_note") or NA
 
         for title, rd in ((t_lo, lo), (t_hi, hi)):
-            note_9 = ""
-            if rd.get("9m") is not None:
-                note_9 = f"9 months: {rd['9m']}% p.a."
             out.append(
                 {
                     "currency": f"CNY ({title})",
                     "rate_1m": _rate_or_na(rd.get("1m")),
                     "rate_3m": _rate_or_na(rd.get("3m")),
                     "rate_6m": _rate_or_na(rd.get("6m")),
+                    "rate_9m": _rate_or_na(rd.get("9m")),
                     "rate_12m": _rate_or_na(rd.get("12m")),
                     "min_deposit_text": min_txt,
                     "max_deposit_text": NA,
-                    "page_text_1m": (note_9 + eff_s).strip() or NA,
+                    "page_text_1m": eff_s.strip() or NA,
                     "data_source": f"ICBC SG FD promo (RMB / CNY) — {title}",
                 }
             )
@@ -3818,12 +3849,13 @@ def extract_scb_fcy_fd_promo(soup: BeautifulSoup) -> Dict[str, Any]:
     target_table = None
     for table in soup.find_all("table"):
         ttxt = table.get_text(" ", strip=True)
-        if "Promotional Interest Rate" not in ttxt:
+        tlow = ttxt.lower()
+        if "promotional interest rate" not in tlow:
             continue
-        if "Fresh Funds in" not in ttxt:
+        if "fresh funds" not in tlow:
             continue
         # Example: "USD Time Deposit (Fixed Deposit) Special Fresh Funds Promotion"
-        if "USD" in ttxt and "Time Deposit" in ttxt:
+        if "usd" in tlow and "time deposit" in tlow:
             target_table = table
             break
 
@@ -3831,7 +3863,8 @@ def extract_scb_fcy_fd_promo(soup: BeautifulSoup) -> Dict[str, Any]:
         # Fallback: any FCY special table that contains "Fresh Funds in USD".
         for table in soup.find_all("table"):
             ttxt = table.get_text(" ", strip=True)
-            if "Promotional Interest Rate" in ttxt and "Fresh Funds in USD" in ttxt:
+            tlow = ttxt.lower()
+            if "promotional interest rate" in tlow and "fresh funds" in tlow and "usd" in tlow:
                 target_table = table
                 break
 

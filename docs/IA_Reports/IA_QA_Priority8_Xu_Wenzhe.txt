@@ -1,0 +1,167 @@
+RateStats — Priority Q&A (8 answers)
+NUS-ISS IA Presentation · Xu Wenzhe · Bank of China Singapore
+Speak naturally; each answer ~40–60 seconds.
+
+────────────────────────────────────────
+1) Business pain point & time saved
+────────────────────────────────────────
+RateStats started from a real ops need: our team must monitor deposit and promotion rates
+across about 17 Singapore banks — roughly 47 rate nodes if you count SGD promo, SGD board,
+and FX board/promo separately.
+
+Before automation, colleagues opened each bank website, copied numbers into Excel by hand.
+That was slow, easy to mistype, and easy to miss a bank when pages changed.
+
+I first built a Python application that fetches pages, parses rates, and writes MarketRateData
+plus the Rainbow Excel that business users already use. Then I added AI Search so we no longer
+rely only on hand-maintained URLs.
+
+On manpower: the heavy weekly copy-paste work is largely replaced by a scheduled run. People
+shift from “collect every cell” to “review exceptions and bank redesigns.” I would not claim
+an exact headcount number without HR data, but the qualitative change is: from full manual
+collection to review-by-exception.
+
+────────────────────────────────────────
+2) What are “~17 banks / ~47 rate nodes”?
+────────────────────────────────────────
+“Banks” means the major Singapore retail banks we track for market comparison — roughly
+seventeen institutions in our url_params configuration.
+
+A “rate node” is one destination we must keep fresh — for example ICBC SGD promotional page,
+ICBC SGD board page, and ICBC foreign-currency board/promo pages count as separate nodes.
+Across banks and product types, that adds up to about forty-seven configured destinations.
+
+So the number is not marketing — it comes from how many independent URLs/parsers the pipeline
+must keep working.
+
+────────────────────────────────────────
+3) Why not let an LLM extract rates directly?
+────────────────────────────────────────
+Two reasons: control and reliability.
+
+First, bank IT constraints: we use controlled AI — search and scoring — not unrestricted
+cloud LLM agents that freely browse and invent answers.
+
+Second, rate tables are structured and high-stakes. A wrong decimal is a business error.
+Our Python extractors already know each bank’s HTML, PDF, or API layout. AI’s job is to find
+the correct latest URL when banks move pages. Parsing stays in tested Python code so output
+format stays stable for MarketRateData and Rainbow Excel.
+
+In short: AI discovers; rules and ML validate; Python extracts; Excel is what users trust.
+
+────────────────────────────────────────
+4) HLF returned for ICBC — how do you stop that?
+────────────────────────────────────────
+Search engines sometimes return a similar product page from the wrong bank — for example an
+HLF fixed-deposit page when we asked for ICBC.
+
+We do not trust the top search hit blindly. After discovery we score candidates with:
+• host / domain whitelist — wrong bank host is rejected early;
+• path and intent rules — promo vs board, PDF vs HTML, Premier vs mass segment;
+• then an ML ranker if several candidates still look plausible.
+
+So the hybrid design is intentional: rules catch hard errors like cross-bank contamination;
+ML helps when the right bank has several close URLs.
+
+────────────────────────────────────────
+5) What does “~95% URL hit” mean, and how measured?
+────────────────────────────────────────
+“URL hit” means: for a destination, the URL selected by AI Search plus scoring matches the
+manual golden URL in url_params.xlsx — or is an equivalent valid page we accept in evaluation.
+
+We measure it with comparison reports and picker evaluation against those golden links, and
+we also ran multi-provider benchmarks — Vertex, Serper, Brave, Tavily — to see which search
+backend worked best under our rules.
+
+About ninety-five percent is the overall hit rate from those evals at the time we chose the
+production path. It is not “AI never fails.” The remaining cases still need fallback to the
+configured URL and human follow-up when a bank redesigns.
+
+────────────────────────────────────────
+6) Why Vertex?
+────────────────────────────────────────
+We did not choose Vertex by brand preference. We ran the same discovery task across providers
+and compared URL quality after our scoring pipeline.
+
+Vertex performed best for our bank-rate use case in that benchmark, so it became the default
+production search backend. The other providers remain in the benchmarking module so we can
+re-check if search quality drifts later.
+
+────────────────────────────────────────
+7) How do you verify parsed rates are correct?
+────────────────────────────────────────
+Three layers:
+
+First, URL health checks — status codes and redirects — before we trust a link in schedule.
+
+Second, we compare AI-selected URLs to manual golden urls in url_params.xlsx and review
+picker_eval / provider compare reports.
+
+Third, for business output, users spot-check MarketRateData and Rainbow against bank websites,
+especially after a bank redesign. When a parser breaks, the Excel row is empty or flagged in
+metadata, which is safer than silently writing a wrong number.
+
+So validation is both automated comparison and business review of the Excel deliverables.
+
+────────────────────────────────────────
+8) After the internship — who maintains it, what’s the debt?
+────────────────────────────────────────
+Operationally, the pipeline is already packaged: batch scripts, scheduler, dated runs under
+runs/YYYYMMDD/, and docs for handover. Day-to-day, FinTech / the ops users who own the rate
+Excel can re-run and collect outputs.
+
+The main technical debt is parser maintenance: banks change DOM and promo pages, so extractors
+need occasional updates. AI reduces URL chasing, but it does not remove parser work.
+
+If I had more time, I would finish production tuning of the ML ranker, harden alerting when
+a bank fails, and keep the handover docs aligned with the latest batch entry points.
+
+────────────────────────────────────────
+One-line closers (optional)
+────────────────────────────────────────
+• Journey: manual → Python product → AI Search inside the same pipeline.
+• AI extends a working app; it was not the starting point.
+• Hybrid rules + ML protect accuracy under bank security constraints.
+
+
+背景与定位
+★ RateStats 解决的具体业务痛点是什么？每周/每月省多少人时？
+★ 「~17 家银行、~47 个 rate nodes」怎么数出来的？一个 node 指什么？
+为什么不做全自动端到端，而要「Python 先落地，再加 AI Search」？
+「controlled AI、不用 unrestricted LLM agent」——银行合规上具体限制了什么？
+你的角色与边界
+★ 哪些是你独立完成的？哪些有 mentor/同事参与？
+「也做过 RPA ops bots」——和 RateStats 什么关系？为什么答辩只讲 RateStats？
+交接文档写到什么程度
+
+你的角色与边界
+★ 哪些是你独立完成的？哪些有 mentor/同事参与？
+「也做过 RPA ops bots」——和 RateStats 什么关系？为什么答辩只讲 RateStats？
+交接文档写到什么程度？别人能否按文档独立跑通？
+架构与技术
+★ 画一下 Discover → Score → Extract → Output，每步失败会怎样？
+★ AI 只负责找 URL，解析仍用 Python——为什么不让 LLM 直接抽利率？
+★ 「AI 返回 HLF 却标成 ICBC」这类错例，规则和 ML 各自怎么挡？
+host whitelist / path rules / ML ranker 的优先级是什么？冲突时听谁的？
+HTML / PDF / API 三类解析各举一个银行例子；最难维护的是哪类？
+银行改版（如 BOC 促销表、ICBC 路径）时，改配置还是改代码？多久能修好？
+AI / ML 与指标
+★ 「~95% URL hit」怎么定义、怎么测、样本量多少、哪次报告？
+★ 为何选 Vertex？Serper/Brave/Tavily 对比表关键结论是什么？
+ML ranker「integration done, tuning ongoing」——现在卡在哪？上生产的标准是什么？
+没有黄金 URL / 搜索全错时，系统如何降级（fallback 到 url_params）？
+测试与部署
+★ 如何证明解析结果正确（和官网/人工 Excel 怎么比）？
+定时任务失败（网站挂、验证码、SMTP）如何告警、谁处理？
+Windows / Mac 两套入口如何保证行为一致？
+runs/YYYYMMDD/ 产物谁用、多久看一次、错误行如何反馈给你？
+业务价值与风险
+★ Before/After 除了「少人手」，有没有量化差错率、时效（T+0 vs 几天）？
+输出给业务的 MarketRateData / Rainbow，业务还要手工改多少？
+若某家银行大改版导致整行空白，业务风险和兜底流程是什么？
+数据来自公网爬取，有没有 ToS / 合规 / 频率限制方面的考虑？
+收尾与展望
+★ 实习结束后系统谁维护？最大技术债是什么？
+若再给 3 个月，你会优先做哪三件事？
+这套思路能否扩展到贷款利率、牌价以外的数据？难点是什么？
+你从 IA 里学到的最大一点（技术或业务协作）是什么？

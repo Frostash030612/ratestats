@@ -36,7 +36,7 @@
 ## 怎么用
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare
+cd AI_Compare
 pip install -r requirements.txt
 
 # 查看哪些 provider 已配置

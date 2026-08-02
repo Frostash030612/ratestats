@@ -65,6 +65,9 @@ FX_BOARD_INTERNAL_COLS: List[str] = [
     "page_raw",
 ]
 
+# MarketRateData 不输出这些外币挂牌分表（业务不需要）。
+FX_BOARD_EXCLUDED_CURRENCIES = frozenset({"JPY", "CHF", "IDR", "THB"})
+
 # 用于 HTTP 请求的固定 User-Agent。
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "

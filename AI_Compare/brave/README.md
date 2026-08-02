@@ -22,7 +22,7 @@ $env:BRAVE_COUNTRY = "sg"   # 可选
 ## 怎么跑
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare\brave
+cd AI_Compare\brave
 
 # 1. 单条冒烟
 python test_brave_search.py

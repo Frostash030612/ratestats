@@ -11,8 +11,11 @@ from urllib.parse import urlparse
 import pandas as pd
 
 _PORTABLE = Path(__file__).resolve().parent.parent / "RateStats_Portable"
-if str(_PORTABLE) not in sys.path:
-    sys.path.insert(0, str(_PORTABLE))
+_SRC = _PORTABLE / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+
+from project_paths import ASSETS_DIR  # noqa: E402
 
 from export_market_url_snapshot import META_PROJECT_TO_DEST, dest_urls_from_market_meta
 from url_config_loader import load_url_config
@@ -38,7 +41,7 @@ def audit_urls(manual_xlsx: Path, ai_xlsx: Path, ai_cfg: Path) -> pd.DataFrame:
     """对比手动与 AI 的 dest→URL：空链、错域名、错行、同银行不同页。"""
     manual = load_url_config(str(manual_xlsx)) if manual_xlsx.suffix == ".xlsx" else {}
     if not manual:
-        manual = load_url_config(str(_PORTABLE / "assets" / "url_params.json"))
+        manual = load_url_config(str(ASSETS_DIR / "url_params.json"))
     ai = load_url_config(str(ai_cfg))
     meta_m = dest_urls_from_market_meta(manual_xlsx) if manual_xlsx.is_file() else {}
     meta_a = dest_urls_from_market_meta(ai_xlsx) if ai_xlsx.is_file() else {}
@@ -146,12 +149,21 @@ def audit_data_gaps(manual_xlsx: Path, ai_xlsx: Path) -> tuple[pd.DataFrame, pd.
 
 
 def _read_discovery_report() -> pd.DataFrame | None:
-    """读取 Portable assets 下最新 ai_search_discovered_*.xlsx。"""
-    assets = _PORTABLE / "assets"
-    files = sorted(assets.glob("ai_search_discovered_*.xlsx"), reverse=True)
-    if not files:
+    """读取 runs/ 下最新 ai_search_discovered_*.xlsx。"""
+    from project_paths import RUNS_ROOT
+
+    latest: Path | None = None
+    latest_mtime = 0.0
+    if not RUNS_ROOT.is_dir():
         return None
-    return pd.read_excel(files[0])
+    for p in RUNS_ROOT.rglob("ai_search_discovered_*.xlsx"):
+        mt = p.stat().st_mtime
+        if mt > latest_mtime:
+            latest_mtime = mt
+            latest = p
+    if latest is None:
+        return None
+    return pd.read_excel(latest)
 
 
 def main() -> int:
@@ -167,21 +179,24 @@ def main() -> int:
         "--ai",
         default=str(_PORTABLE / "20260518" / "MarketRateData_20260518_17.32_AISearch.xlsx"),
     )
-    ap.add_argument("--ai-cfg", default=str(_PORTABLE / "assets" / "url_params_ai.xlsx"))
-    ap.add_argument("--out", default=str(Path(__file__).parent / "results"))
+    from project_paths import audit_out_dir, find_latest_url_params_ai
+
+    default_ai_cfg = find_latest_url_params_ai() or (ASSETS_DIR / "url_params_ai.xlsx")
+    ap.add_argument("--ai-cfg", default=str(default_ai_cfg))
+    ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
     manual_p = Path(args.manual)
     ai_p = Path(args.ai)
     ai_cfg = Path(args.ai_cfg)
-    out_dir = Path(args.out)
+    out_dir = Path(args.out) if args.out else audit_out_dir()
     out_dir.mkdir(parents=True, exist_ok=True)
 
     sys.stdout.reconfigure(encoding="utf-8")
 
     print("=== 1. 链接问题 (url_params / 元数据) ===")
     df_url = audit_urls(
-        _PORTABLE / "assets" / "url_params.xlsx",
+        ASSETS_DIR / "url_params.xlsx",
         ai_p,
         ai_cfg,
     )

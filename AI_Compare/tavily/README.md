@@ -21,7 +21,7 @@ $env:TAVILY_DEPTH = "basic"   # basic 或 advanced，advanced 更深更慢但更
 ## 怎么跑
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare\tavily
+cd AI_Compare\tavily
 
 python test_tavily_search.py
 python tavily_url_discovery.py

@@ -16,7 +16,7 @@
 验证：
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare
+cd AI_Compare
 python load_keys.py
 python run_eval.py --list
 ```
@@ -53,7 +53,7 @@ $env:SERPER_API_KEY = "粘贴你的key"
 ### 验证
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare\serper
+cd AI_Compare\serper
 python test_serper_search.py
 ```
 
@@ -85,7 +85,7 @@ $env:BRAVE_COUNTRY = "sg"   # 可选，默认已是 sg
 ### 验证
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare\brave
+cd AI_Compare\brave
 python test_brave_search.py
 ```
 
@@ -115,7 +115,7 @@ $env:TAVILY_DEPTH = "basic"   # 可选：basic（快）或 advanced（更深更�
 ### 验证
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare\tavily
+cd AI_Compare\tavily
 python test_tavily_search.py
 ```
 
@@ -127,7 +127,7 @@ Vertex 使用 `RateStats_Portable/assets/ratestatsearch-*.json` 服务账号，�
 若移动了密钥文件，可设置：
 
 ```powershell
-$env:GOOGLE_APPLICATION_CREDENTIALS = "C:\Users\xuwenzhe\Desktop\RateStats\RateStats_Portable\assets\ratestatsearch-f5f95dab974f.json"
+$env:GOOGLE_APPLICATION_CREDENTIALS = "RateStats_Portable\assets\ratestatsearch-f5f95dab974f.json"
 ```
 
 ---
@@ -141,7 +141,7 @@ $env:SERPER_API_KEY = "你的serper_key"
 $env:BRAVE_API_KEY  = "你的brave_token"
 $env:TAVILY_API_KEY = "tvly-你的tavily_key"
 
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare
+cd AI_Compare
 python run_eval.py --list
 ```
 
@@ -158,7 +158,7 @@ python run_eval.py --list
 ### 方式 B：命令行
 
 ```powershell
-cd C:\Users\xuwenzhe\Desktop\RateStats\AI_Compare
+cd AI_Compare
 python run_eval.py --auto
 ```
 

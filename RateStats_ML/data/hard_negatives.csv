@@ -1,0 +1,8 @@
+dest,url,note
+ocbc_board_url,https://www.ocbc.com/premier-banking/our-solutions/deposits/time-deposit,示例：可追加更多错链
+dbs_fcy_board_api_url,https://www.dbs.com.sg/personal/deposits/fixed-deposits/fixed-deposit,Vertex 常误选 HTML 页
+dbs_fcy_board_api_url,https://www.dbs.com.sg/global-financial-markets/dbs-treasury-api,treasury 非挂牌 API
+rhb_board_pdf_url,https://rhbgroup.com.sg/rhb/personal/promotions/fixed-deposit-campaign,促销页非 Depositrates.pdf
+rhb_fcy_board_pdf_url,https://rhbgroup.com.sg/rhb/personal/rates-and-charges,HTML 费率页非 PDF 挂牌
+boc_board_url,https://www.bankofchina.com/sg/bocinfo/bi3/,目录页非 dated html
+boc_url,https://www.bankofchina.com/sg/bocinfo/bi3/bi31/,目录页非促销文章

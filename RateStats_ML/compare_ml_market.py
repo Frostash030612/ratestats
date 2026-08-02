@@ -7,7 +7,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from _portable import AI_COMPARE_DIR, OUTPUT_DIR
+from _portable import AI_COMPARE_DIR, RUNS_ROOT
 
 if str(AI_COMPARE_DIR) not in sys.path:
     sys.path.insert(0, str(AI_COMPARE_DIR))
@@ -19,7 +19,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--manual", required=True)
     ap.add_argument("--ai", required=True)
-    ap.add_argument("--out-dir", default=str(OUTPUT_DIR))
+    ap.add_argument("--out-dir", default=str(RUNS_ROOT), help="对比报告目录（默认 runs/）")
     args = ap.parse_args()
     out = Path(args.out_dir)
     run_compare(Path(args.manual), Path(args.ai), out)

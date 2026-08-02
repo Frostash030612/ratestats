@@ -11,13 +11,20 @@ from pathlib import Path
 import pandas as pd
 
 from _portable import DEFAULT_MANUAL_XLSX, OUTPUT_DIR, PORTABLE_DIR
-from dataset import iter_discovery_reports, load_discovery_report_rows, load_gold_manual
+from dataset import load_gold_manual
+from eval_summaries import (
+    summarize_by_category,
+    summarize_by_dest,
+    summarize_baseline_misses,
+    summarize_overall,
+)
+from ml_discovery_dirs import default_discovery_dirs, iter_discovery_reports
 from picker import pick_best_url_ml
 
 if str(PORTABLE_DIR) not in sys.path:
     sys.path.insert(0, str(PORTABLE_DIR))
 
-from eval_metrics import hit_at_k, normalize_url, rank_in_topn  # noqa: E402
+from eval_metrics import normalize_url, picker_url_hit, rank_in_topn  # noqa: E402
 from url_discovery_pick import pick_best_url  # noqa: E402
 from url_fallback_resolver import build_fallback_map  # noqa: E402
 
@@ -49,12 +56,22 @@ def evaluate_on_discovery_reports(
             if not cands:
                 continue
             fb = fallback_map.get(dest, ref)
+            boc_companion = ""
+            if dest in ("boc_url", "boc_board_url"):
+                boc_companion = fallback_map.get(
+                    "boc_board_url" if dest == "boc_url" else "boc_url",
+                    "",
+                )
 
             base_url, _ = pick_best_url(cands, dest, fb)
             ml_url, ml_src = pick_best_url_ml(cands, dest, fb)
 
-            base_hit = 1 if normalize_url(base_url) == normalize_url(ref) else 0
-            ml_hit = 1 if normalize_url(ml_url) == normalize_url(ref) else 0
+            base_hit = picker_url_hit(
+                dest, base_url, ref, candidates=cands, gold_companion=boc_companion
+            )
+            ml_hit = picker_url_hit(
+                dest, ml_url, ref, candidates=cands, gold_companion=boc_companion
+            )
             gold_rank = rank_in_topn(ref, cands)
 
             rows.append(
@@ -82,7 +99,6 @@ def evaluate_synthetic_live_search(
     sleep_sec: float = 0.4,
 ) -> pd.DataFrame:
     """对若干 dest 实时搜索，对比 baseline / ML 命中率。"""
-    import os
     import time
 
     from url_key_aliases import URL_PARAM_DEST_KEYS  # noqa: E402
@@ -93,7 +109,7 @@ def evaluate_synthetic_live_search(
         raise RuntimeError("需要 RateStats_Portable 与 Vertex 配置")
 
     try:
-        from _discovery_common import QUERY_BY_DEST  # noqa: E402
+        from vertex_url_discovery import QUERY_BY_DEST  # noqa: E402
     except ImportError:
         QUERY_BY_DEST = {}
 
@@ -115,6 +131,12 @@ def evaluate_synthetic_live_search(
             rows.append({"dest": dest, "error": str(e)})
             continue
 
+        boc_companion = ""
+        if dest in ("boc_url", "boc_board_url"):
+            boc_companion = fallback_map.get(
+                "boc_board_url" if dest == "boc_url" else "boc_url",
+                "",
+            )
         base_url, _ = pick_best_url(cands, dest, fb)
         ml_url, ml_src = pick_best_url_ml(cands, dest, fb)
         rows.append(
@@ -122,8 +144,12 @@ def evaluate_synthetic_live_search(
                 "dest": dest,
                 "query": query,
                 "gold_rank_in_candidates": rank_in_topn(ref, cands),
-                "baseline_hit": 1 if normalize_url(base_url) == normalize_url(ref) else 0,
-                "ml_hit": 1 if normalize_url(ml_url) == normalize_url(ref) else 0,
+                "baseline_hit": picker_url_hit(
+                    dest, base_url, ref, candidates=cands, gold_companion=boc_companion
+                ),
+                "ml_hit": picker_url_hit(
+                    dest, ml_url, ref, candidates=cands, gold_companion=boc_companion
+                ),
                 "ml_source": ml_src,
                 "n_candidates": len(cands),
             }
@@ -138,52 +164,39 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--manual", default=str(DEFAULT_MANUAL_XLSX))
     ap.add_argument(
         "--reports-dir",
-        default=str(PORTABLE_DIR / "assets"),
-        help="含 ai_search_discovered_*.xlsx 的目录",
+        default=None,
+        help="额外发现报告目录（默认仅扫描 runs/）",
     )
     ap.add_argument("--live-search", action="store_true", help="额外对 Vertex 做实时搜索评估（较慢）")
     ap.add_argument("--live-limit", type=int, default=15)
     args = ap.parse_args(argv)
 
     gold = load_gold_manual(Path(args.manual))
-    report_dir = Path(args.reports_dir)
-    reports = list(iter_discovery_reports([report_dir, PORTABLE_DIR.parent / "AI_Compare" / "output"]))
+    dirs = default_discovery_dirs()
+    if args.reports_dir:
+        dirs = [Path(args.reports_dir)] + dirs
+    reports = list(iter_discovery_reports(dirs))
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     ts = datetime.now().strftime("%Y%m%d_%H.%M")
-    out = OUTPUT_DIR / f"picker_eval_{ts}.xlsx"
+    from project_paths import ml_eval_dir
+
+    out = ml_eval_dir() / f"picker_eval_{ts}.xlsx"
 
     with pd.ExcelWriter(out, engine="openpyxl") as w:
         if reports:
             df = evaluate_on_discovery_reports(reports, gold)
             df.to_excel(w, index=False, sheet_name="from_discovery_reports")
             if not df.empty:
-                summ = pd.DataFrame(
-                    [
-                        {
-                            "metric": "baseline_hit_rate",
-                            "value": df["baseline_hit"].mean(),
-                        },
-                        {
-                            "metric": "ml_hit_rate",
-                            "value": df["ml_hit"].mean(),
-                        },
-                        {
-                            "metric": "ml_improved_rows",
-                            "value": int(((df["ml_hit"] == 1) & (df["baseline_hit"] == 0)).sum()),
-                        },
-                        {
-                            "metric": "ml_regressed_rows",
-                            "value": int(((df["ml_hit"] == 0) & (df["baseline_hit"] == 1)).sum()),
-                        },
-                        {
-                            "metric": "n_dests",
-                            "value": len(df),
-                        },
-                    ]
-                )
-                summ.to_excel(w, index=False, sheet_name="summary_reports")
-                print(summ.to_string(index=False))
+                summarize_overall(df).to_excel(w, index=False, sheet_name="summary")
+                summarize_by_dest(df).to_excel(w, index=False, sheet_name="by_dest")
+                summarize_baseline_misses(df).to_excel(w, index=False, sheet_name="baseline_miss_dest")
+                summarize_by_category(df).to_excel(w, index=False, sheet_name="by_category")
+                print(summarize_overall(df).to_string(index=False))
+                miss = summarize_baseline_misses(df)
+                if not miss.empty:
+                    print("\n[baseline 未满分 dest]")
+                    print(miss.head(15).to_string(index=False))
         else:
             pd.DataFrame([{"note": "未找到 ai_search_discovered_*.xlsx"}]).to_excel(
                 w, index=False, sheet_name="from_discovery_reports"

@@ -6,5 +6,8 @@ BRAVE_API_KEY=
 TAVILY_API_KEY=
 # BING_API_KEY=
 
-# Vertex 一般不用写（默认用 RateStats_Portable/assets 下的 JSON）
-# GOOGLE_APPLICATION_CREDENTIALS=C:\Users\xuwenzhe\Desktop\RateStats\RateStats_Portable\assets\ratestatsearch-f5f95dab974f.json
+# Vertex（可通过“打开 API 钥匙设置”界面填写）
+# 路径相对于 AI_Compare；macOS / Windows 均可使用正斜杠
+# GOOGLE_APPLICATION_CREDENTIALS=../assets/你的服务账号.json
+# GOOGLE_CLOUD_PROJECT=你的Google Cloud项目ID
+# VERTEX_ENGINE_ID=你的Vertex搜索引擎ID

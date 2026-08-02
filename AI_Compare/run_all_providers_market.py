@@ -19,14 +19,16 @@ from pathlib import Path
 
 _THIS = Path(__file__).resolve().parent
 _PORTABLE = _THIS.parent / "RateStats_Portable"
-_ASSETS = _PORTABLE / "assets"
+_SRC = _PORTABLE / "src"
+_ASSETS = _THIS.parent / "assets"
 
 if str(_THIS) not in sys.path:
     sys.path.insert(0, str(_THIS))
-if str(_PORTABLE) not in sys.path:
-    sys.path.insert(0, str(_PORTABLE))
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
 
 from load_keys import ensure_keys_loaded  # noqa: E402
+from project_paths import default_date_run_dir  # noqa: E402
 
 PROVIDER_LABELS = {
     "vertex": "Vertex",
@@ -189,7 +191,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--skip-discover", action="store_true")
     ap.add_argument("--discover-only", action="store_true")
     ap.add_argument("--sleep", type=float, default=0.4)
-    ap.add_argument("--out-dir", default=None, help="Market 输出目录，默认 RateStats_Portable/YYYYMMDD")
+    ap.add_argument("--out-dir", default=None, help="Market 输出目录，默认项目 runs/YYYYMMDD/")
     ap.add_argument("--run-tag", default=None)
     ap.add_argument(
         "--also-write-portable-vertex",
@@ -214,12 +216,12 @@ def main(argv: list[str] | None = None) -> int:
             print(f"未知 provider: {n}", file=sys.stderr)
             return 1
 
+    from project_paths import ai_compare_config_dir, default_date_run_dir
+
     tag = args.run_tag or datetime.now().strftime("%Y%m%d_%H.%M")
-    date_folder = datetime.now().strftime("%Y%m%d")
-    out_dir = Path(args.out_dir).resolve() if args.out_dir else (_PORTABLE / date_folder)
+    out_dir = Path(args.out_dir).resolve() if args.out_dir else default_date_run_dir()
     out_dir.mkdir(parents=True, exist_ok=True)
-    assets_dir = _THIS / "output" / tag
-    assets_dir.mkdir(parents=True, exist_ok=True)
+    assets_dir = ai_compare_config_dir(tag, run_dir=out_dir)
 
     print(f"输出目录: {out_dir}")
     print(f"配置/发现报告: {assets_dir}")

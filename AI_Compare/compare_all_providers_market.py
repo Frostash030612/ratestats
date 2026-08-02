@@ -50,14 +50,19 @@ def main() -> int:
         default="manual",
         help="文件名（不含路径）包含该子串则跳过对比，默认排除手动 Market（如 *manual*）",
     )
-    ap.add_argument("--out-dir", default=str(_THIS / "results"))
+    ap.add_argument("--out-dir", default=None)
     ap.add_argument("--tol", type=float, default=0.011)
     args = ap.parse_args()
 
     sys.stdout.reconfigure(encoding="utf-8")
     manual = Path(args.manual)
     ai_dir = Path(args.ai_dir)
-    out_dir = Path(args.out_dir)
+    if args.out_dir:
+        out_dir = Path(args.out_dir)
+    else:
+        from project_paths import compare_out_dir
+
+        out_dir = compare_out_dir()
 
     if not manual.is_file():
         print(f"[ERROR] 手动基准不存在: {manual}", file=sys.stderr)

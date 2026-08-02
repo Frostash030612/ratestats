@@ -14,6 +14,7 @@ from typing import Any, List, Optional, Tuple
 
 import pandas as pd
 
+from bank_constants import FX_BOARD_EXCLUDED_CURRENCIES
 from bank_excel_style_helpers import (
     apply_bank_colors as _apply_bank_colors,
     center_align_rate_columns as _center_align_rate_columns,
@@ -51,6 +52,11 @@ def _is_sgd_fx_board_currency(cur: Any) -> bool:
     SGD 挂牌数据应落在「新元挂牌利率」sheet，不单独生成「挂牌_SGD / SGD 外币挂牌利率」。
     """
     return _fx_board_currency_label(cur).strip().upper() == "SGD"
+
+
+def _is_excluded_fx_board_currency(cur: Any) -> bool:
+    """业务不需要的外币挂牌币种（不生成 挂牌_* sheet）。"""
+    return _fx_board_currency_label(cur).strip().upper() in FX_BOARD_EXCLUDED_CURRENCIES
 
 
 def _remove_sheet_if_exists(wb: Any, name: str) -> None:
@@ -140,7 +146,10 @@ def write_market_rate_excel_with_template(
     else:
         groups = list(df_fx_board.groupby(curr_col, dropna=False, sort=False))
         groups = [
-            (k, v) for k, v in groups if not _is_sgd_fx_board_currency(k)
+            (k, v)
+            for k, v in groups
+            if not _is_sgd_fx_board_currency(k)
+            and not _is_excluded_fx_board_currency(k)
         ]
         groups.sort(key=lambda kv: _fx_board_currency_label(kv[0]))
         fx_groups_sorted = groups
@@ -169,6 +178,8 @@ def write_market_rate_excel_with_template(
 
     # 模板可能预置「挂牌_SGD」；SGD 挂牌仅在「新元挂牌利率」，不保留该外币挂牌分 sheet。
     _remove_sheet_if_exists(wb, "挂牌_SGD")
+    for cur in sorted(FX_BOARD_EXCLUDED_CURRENCIES):
+        _remove_sheet_if_exists(wb, f"挂牌_{cur}")
 
     wb.save(temp_workbook_path)
 

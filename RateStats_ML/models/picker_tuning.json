@@ -1,0 +1,6 @@
+{
+  "blend_rule_weight": 0.15,
+  "min_ml_proba": 0.12,
+  "use_ambiguous_gate": true,
+  "ambiguous_rule_margin": 0.12
+}

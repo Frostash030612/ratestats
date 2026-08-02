@@ -1,0 +1,25 @@
+RateStats code delta (chat-only)
+Scope: this conversation + rainbow sort/collect conversation
+No bats / assets / url_params / keys — keep other PC configs.
+
+Extract into RateStats project root (overwrite same relative paths).
+
+Files (18):
+  RateStats_Portable/src/bank_cli_fetch_params.py
+  RateStats_Portable/src/bank_cli_parser.py
+  RateStats_Portable/src/bank_constants.py
+  RateStats_Portable/src/bank_excel_data_builder.py
+  RateStats_Portable/src/bank_excel_template_writer.py
+  RateStats_Portable/src/bank_extractors/impl.py
+  RateStats_Portable/src/bank_fetch_and_extract.py
+  RateStats_Portable/src/create_rainbow_fcy_sheet.py
+  RateStats_Portable/src/create_rainbow_sgd_board_sheet.py
+  RateStats_Portable/src/create_rainbow_sgd_promo_sheet.py
+  RateStats_Portable/src/export_market_url_snapshot.py
+  RateStats_Portable/src/url_defaults.py
+  RateStats_Portable/src/url_dest_intent.py
+  RateStats_Portable/src/url_discovery_pick.py
+  RateStats_Portable/src/url_key_aliases.py
+  RateStats_Portable/src/url_pick_refinement.py
+  RateStats_Portable/src/url_sources.py
+  RateStats_Portable/src/vertex_url_discovery.py
